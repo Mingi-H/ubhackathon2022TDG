@@ -23,6 +23,9 @@ def setplayer(filename):
         out = []
         count = 0
         for line in reader:
+            if(line[0] == "P"):
+                line.remove("P")
+                line.insert(0," ")
             if(row == count):
                 temp = line[column]
                 line.remove(temp)
@@ -48,11 +51,30 @@ def setfield(filename):
 
 setfield("field.csv")
 
-'''forever = 1
-while forever < 2:
+print("Welcome to one of the tower defense games(?) of all time! To review the rules and controls, please type rules. If you understand them or want to skip them, just start playing.")
+
+forever = True
+while forever == True:
     text = input()
-    if text == "":
-        print("amogus")
-    elif text == "stop":
-        forever += 1'''
+    if text == "stop":
+        forever = False
+    elif text == "up":
+        if(row - 2 >= 1):
+            row += -2
+            setplayer("field.csv")
+            print("you moved up!")
+        else:
+            print("can't move up any further!")
+    elif text == "down":
+        if(row + 2 <= 6):
+            row += 2
+            setplayer("field.csv")
+            print("you moved down!")
+        else: 
+            print("can't move down any further!")
+    elif text == "rules":
+        with open ("rules.txt") as r:
+            for line in r:
+                print(line)
+    setfield("field.csv")
 
