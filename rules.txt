@@ -1,6 +1,8 @@
 The rules are simple. Shoot the enemies that slowly approach you and try to defend yourself! 
 Every turn, you get one action point.
 With that action point, you can shoot.
+Or if you don't want to do anything for some reason, type nothing.
+If you want to quickly go mining for some extra gold, hit mine!
 Switching weapons or moving up/down doesn't consume an action point.
 Type in shop to access the shop, where you can hire allies and items with the gold dropped from the enemy.
 Good luck and have fun!

@@ -1,6 +1,7 @@
 column = 0
 row = 3
 
+import random
 import csv
 
 def fieldwrite(filename):
@@ -10,7 +11,10 @@ def fieldwrite(filename):
             templist = []
             for k in range(0,81):
                 if(x%2==0):
-                    templist.append("-")
+                    if(k%2 == 0):
+                        templist.append("-")
+                    if(k%2 == 1):
+                        templist.append(" ")
                 if(x%2==1):
                     templist.append(" ")
             writer.writerow(templist)
@@ -39,6 +43,30 @@ def setplayer(filename):
 
 setplayer("field.csv")
 
+def spawnenemy(filename, enemylist):
+    with open(filename) as f:
+        reader = csv.reader(f)
+        out = []
+        spawnlocation = {}
+        spawnlane = [1,3,5]
+        count = 0
+        for enemy in enemylist:
+            spawnlocation[enemy] = spawnlane[random.randint(0,2)]
+        for line in reader:
+            for x in range(1,6,2):
+                if(count == x):
+                    for enemy in spawnlocation:
+                        if spawnlocation[enemy] == x:
+                            line.pop()
+                            line.append(enemy)
+            count += 1
+            out.append(line)
+    with open(filename,"w",newline = "") as w:
+        writer = csv.writer(w)
+        for list in out:
+            writer.writerow(list)
+
+spawnenemy("field.csv",["BR"])
 
 def setfield(filename):
     with open (filename) as f:
@@ -51,7 +79,7 @@ def setfield(filename):
 
 setfield("field.csv")
 
-print("Welcome to one of the tower defense games(?) of all time! To review the rules and controls, please type rules. If you understand them or want to skip them, just start playing.")
+print("Welcome to one of the tower defense games(?) of all time! To review the rules and controls, please type rules. This game was designed around a big enough console screen, so if the field looks wacky, extend the console by a bit and then reload the program. If you understand them or want to skip them, just start playing. Also, type stop to stop the game.")
 
 forever = True
 while forever == True:
