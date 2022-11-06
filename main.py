@@ -131,13 +131,15 @@ def updateenemyposition():
         for list in out:
             writer.writerow(list)
 
-def updateenemyhealth(xcoord):
+def updateenemyhealth(y):
     with open("enemy.csv") as e:
         out = []
+        count = 0
         readerenemy = csv.reader(e)
         for line in readerenemy:
-            if(int(line[3]) == xcoord):
+            if(int(line[3]) == y and count < 1):
                 line[1] = int(line[1]) - player_dmg
+                count += 1
             out.append(line)
     with open ("enemy.csv","w",newline = "") as f:
         writer = csv.writer(f)
@@ -146,52 +148,24 @@ def updateenemyhealth(xcoord):
 
 def enemywalk():
     emptycheck()
-    with open("field.csv") as f:
-        with open("enemy.csv") as e:
-            out = []
-            reader = csv.reader(f)
-            readerenemy = csv.reader(e)
-            for lineenemy in readerenemy:
-                for line in reader:
-                    if lineenemy[0] in line:
-                        temp = line.index(lineenemy[0])
-                        line.remove(lineenemy[0])
-                        line.insert(temp, " ")
-                        line.remove(line[temp - int(lineenemy[2])])
-                        line.insert(temp-int(lineenemy[2]),lineenemy[0])
-                    out.append(line)
-    with open("field.csv","w",newline = "") as w:
-        writer = csv.writer(w)
-        for list in out:
-            writer.writerow(list)
     updateenemyposition()
     fieldupdate()
 
 def searchenemy():
-    with open("field.csv") as f:
-        with open("enemy.csv") as e:
-            reader = csv.reader(f)
-            readerenemy = csv.reader(e)
-            for lineenemy in readerenemy:
-                count = 0
-                for line in reader:
-                    if(lineenemy[0] in line and int(lineenemy[3]) == count and row == count):
-                        updateenemyhealth(count)
-                        return True
-                    count += 1
+    with open ("enemy.csv") as e:
+        reader = csv.reader(e)
+        for line in reader:
+            if(int(line[3]) == row):
+                updateenemyhealth(row)
+                return True
+    return False
                 
 def shoot():
-    with open("field.csv") as f:
-        reader = csv.reader(f)
-        count = 0
-        for line in reader:
-            if(row == count):
-                print("Bang!")
-                if(searchenemy() == True):
-                    print("nice shot! You dealt " + str(player_dmg) + " damage!")
-                else:
-                    print("Aww... you missed...")
-            count += 1
+    print("Bang!")
+    if(searchenemy() == True):
+        print("nice shot! You dealt " + str(player_dmg) + " damage!")
+    else:
+        print("Aww... you missed...")
 
 def enemydeath():
     out = []
@@ -258,9 +232,11 @@ turn = 0
 
 while forever == True:
     text = input()
+    repeat = False
     if text == "stop":
         forever = False
     elif text == "up":
+        repeat = True
         if(row - 2 >= 1):
             row += -2
             setplayer("field.csv")
@@ -268,6 +244,7 @@ while forever == True:
         else:
             print("can't move up any further!")
     elif text == "down":
+        repeat = True
         if(row + 2 <= 6):
             row += 2
             setplayer("field.csv")
@@ -275,45 +252,51 @@ while forever == True:
         else: 
             print("can't move down any further!")
     elif text == "rules":
+        repeat = True
         with open ("rules.txt") as r:
             for line in r:
                 print(line)
     elif text == "enemy":
+        repeat = True
         with open ("readingenemy.txt") as r:
             for line in r:
                 print(line)
     elif text == "help":
+        repeat = True
         print("Welcome to one of the tower defense games of all time! To review the rules and controls, please type rules. To see how to read the enemy stats, type enemy. This game was designed around a big enough console screen, so if the field looks wacky, extend the console by a bit and then reload the program. If you understand the rules or want to skip them, just start playing. Also, type stop to stop the game. Remember that typing help at any time will cause this to be printed again!")
     elif text == "":
+        repeat = False
         enemydeath()
         enemywalk()
         turn += 1
     elif text == "shoot":
+        repeat = False
         shoot()
         enemydeath()
         enemywalk()
         turn += 1
     print("it is currently turn " + str(turn) + " out of 50.")
-    if(turn == 5):
-        spawnenemy("field.csv",["R"])
-    if(turn == 8):
-        spawnenemy("field.csv",["R"])
-    if(turn == 9):
-        spawnenemy("field.csv",["R"])
-    if(turn == 14):
-        spawnenemy("field.csv",["R"])
-    if(turn == 15):
-        spawnenemy("field.csv",["R"])
-    if(turn == 16):
-        spawnenemy("field.csv",["R"])
-    if(turn == 20):
-        spawnenemy("field.csv",["R"])
-    if(turn == 25):
-        spawnenemy("field.csv",["R"])
-    if(turn == 26):
-        spawnenemy("field.csv",["R"])
-    if(turn == 27):
-        spawnenemy("field.csv",["R"])
+    if(repeat == False):
+        if(turn == 5):
+            spawnenemy("field.csv",["R"])
+        if(turn == 8):
+            spawnenemy("field.csv",["R"])
+        if(turn == 9):
+            spawnenemy("field.csv",["R"])
+        if(turn == 14):
+            spawnenemy("field.csv",["R"])
+        if(turn == 15):
+            spawnenemy("field.csv",["R"])
+        if(turn == 16):
+            spawnenemy("field.csv",["R"])
+        if(turn == 20):
+            spawnenemy("field.csv",["R"])
+        if(turn == 25):
+            spawnenemy("field.csv",["R"])
+        if(turn == 26):
+            spawnenemy("field.csv",["R"])
+        if(turn == 27):
+            spawnenemy("field.csv",["R"])
     if(turn == 50):
         forever = False
         print("You've survived the day... congratulations on finishing the demo! I was getting sick of looking at csv files also it's 3:00 AM, so that's it for now! cya!")
