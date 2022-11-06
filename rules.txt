@@ -1,3 +1,4 @@
+Premise: You were enjoying your day when suddenly a bunch of noob robots showed up and tried invading your house... Why are they here? What secrets do they hold? Welcome to untitled robot shooty thing game.
 The rules are simple. Shoot the enemies that slowly approach you and try to defend yourself! 
 Every turn, you get one action point.
 With that action point, you can shoot.
