@@ -4,6 +4,8 @@ row = 3
 import random
 import csv
 
+enemytotal = []
+
 def fieldwrite(filename):
     with open(filename,"w",newline = "") as f:
         writer = csv.writer(f)
@@ -18,8 +20,6 @@ def fieldwrite(filename):
                 if(x%2==1):
                     templist.append(" ")
             writer.writerow(templist)
-
-fieldwrite("field.csv")
 
 def setplayer(filename):
     with open(filename) as f:
@@ -40,8 +40,6 @@ def setplayer(filename):
         writer = csv.writer(w)
         for list in out:
             writer.writerow(list)
-
-setplayer("field.csv")
 
 def spawnenemy(filename, enemylist):
     with open(filename) as f:
@@ -65,8 +63,39 @@ def spawnenemy(filename, enemylist):
         writer = csv.writer(w)
         for list in out:
             writer.writerow(list)
+    
+def enemyregister(enemylist):
+    out = []
+    with open("enemydictionary.csv") as f:
+        reader = csv.reader(f)
+        for line in reader:
+            for enemy in enemylist:
+                if(enemy == line[1]):
+                    out.append([line[1],line[2],line[3]])
+    with open ("enemy.csv","w",newline = "") as f:
+        writer = csv.writer(f)
+        for list in out:
+            writer.writerow(list)
 
-spawnenemy("field.csv",["BR"])
+def enemywalk():
+    with open("field.csv") as f:
+        with open("enemy.csv") as e:
+            out = []
+            reader = csv.reader(f)
+            readerenemy = csv.reader(e)
+            for lineenemy in readerenemy:
+                for line in reader:
+                    if lineenemy[0] in line:
+                        temp = line.index(lineenemy[0])
+                        line.remove(lineenemy[0])
+                        line.insert(temp, " ")
+                        line.remove(line[temp - 2])
+                        line.insert(temp-2,lineenemy[0])
+                    out.append(line)
+    with open("field.csv","w",newline = "") as w:
+        writer = csv.writer(w)
+        for list in out:
+            writer.writerow(list)
 
 def setfield(filename):
     with open (filename) as f:
@@ -77,9 +106,13 @@ def setfield(filename):
                 temp += index
             print(temp)
 
+fieldwrite("field.csv")
+setplayer("field.csv")
+spawnenemy("field.csv",["BR"])
+enemyregister(["BR"])
 setfield("field.csv")
 
-print("Welcome to one of the tower defense games(?) of all time! To review the rules and controls, please type rules. This game was designed around a big enough console screen, so if the field looks wacky, extend the console by a bit and then reload the program. If you understand them or want to skip them, just start playing. Also, type stop to stop the game.")
+print("Welcome to one of the tower defense games(?) of all time! To review the rules and controls, please type rules. This game was designed around a big enough console screen, so if the field looks wacky, extend the console by a bit and then reload the program. If you understand the rules or want to skip them, just start playing. Also, type stop to stop the game.")
 
 forever = True
 while forever == True:
@@ -104,5 +137,7 @@ while forever == True:
         with open ("rules.txt") as r:
             for line in r:
                 print(line)
+    elif text == "":
+        enemywalk()
     setfield("field.csv")
 
