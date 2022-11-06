@@ -1,0 +1,2 @@
+you read the enemy status like this:
+abbreviation(name shortened),health,speed,row,column
